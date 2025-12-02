@@ -19,4 +19,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/natuur-dex', [NatuurDexController::class, 'index'])->name('natuur-dex.index');
 });
 
+Route::get('/test-layout', function () {
+    return view('test-layout');
+});
+
 require __DIR__.'/auth.php';
