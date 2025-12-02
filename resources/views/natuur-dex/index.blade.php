@@ -16,22 +16,24 @@
     <!-- Mobiele Container -->
     <div class="w-full max-w-sm mx-auto h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col" x-data="{ openAccordion: {{ $categories->first()->id ?? 'null' }} }">
 
-        <!-- 1. Vaste Header -->
-        <header class="absolute top-0 left-0 right-0 bg-white z-10 shadow-md">
-            <div class="p-4 border-b border-gray-200">
-                <h1 class="text-2xl font-extrabold text-blue-600 text-center">Natuur kaart dex</h1>
-            </div>
-            <div class="p-2 flex justify-between items-center bg-gray-50">
-                <span class="font-bold text-gray-700">{{ $location }}</span>
-                <div x-show="openAccordion === {{ $categories->first()->id ?? 'null' }}" x-transition class="flex items-center gap-1 text-orange-600 font-semibold">
-                    <span>{{ $season }}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                        <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201-4.458 5.5 5.5 0 018.904-4.923.75.75 0 01.393 1.285l-3.203 3.203a.75.75 0 001.06 1.06l3.204-3.203a.75.75 0 011.286.393 5.5 5.5 0 01-2.443 6.643z" clip-rule="evenodd" />
-                        <path fill-rule="evenodd" d="M11.424 15.312a5.5 5.5 0 01-4.458-9.201 5.5 5.5 0 01-4.923 8.904.75.75 0 011.285-.393l3.203-3.203a.75.75 0 001.06 1.06l-3.203 3.204a.75.75 0 01.393 1.286 5.5 5.5 0 016.643-2.443z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-            </div>
-        </header>
+       <x-slot:header>
+           <header class="absolute top-0 left-0 right-0 bg-white z-10 shadow-md">
+               <div class="p-4 border-b border-gray-200">
+                   <h1 class="text-2xl font-extrabold text-blue-600 text-center">Natuur kaart dex</h1>
+               </div>
+               <div class="p-2 flex justify-between items-center bg-gray-50">
+                   <span class="font-bold text-gray-700">{{ $location }}</span>
+                   <div x-show="openAccordion === {{ $categories->first()->id ?? 'null' }}" x-transition class="flex items-center gap-1 text-orange-600 font-semibold">
+                       <span>{{ $season }}</span>
+                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                           <path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201-4.458 5.5 5.5 0 018.904-4.923.75.75 0 01.393 1.285l-3.203 3.203a.75.75 0 001.06 1.06l3.204-3.203a.75.75 0 011.286.393 5.5 5.5 0 01-2.443 6.643z" clip-rule="evenodd" />
+                           <path fill-rule="evenodd" d="M11.424 15.312a5.5 5.5 0 01-4.458-9.201 5.5 5.5 0 01-4.923 8.904.75.75 0 011.285-.393l3.203-3.203a.75.75 0 001.06 1.06l-3.203 3.204a.75.75 0 01.393 1.286 5.5 5.5 0 016.643-2.443z" clip-rule="evenodd" />
+                       </svg>
+                   </div>
+               </div>
+           </header>
+       </x-slot:header>
+
 
         <!-- 2. Scrollbare Content Sectie -->
         <main class="flex-1 overflow-y-auto safe-area-padding">
