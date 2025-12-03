@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('card_id')->references('id')->on('cards');
             $table->date('acquired_at');
             $table->string('image_url', 255);
+            $table->boolean('is_shiny');
         });
 
         Schema::enableForeignKeyConstraints();
