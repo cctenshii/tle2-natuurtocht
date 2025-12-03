@@ -17,10 +17,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/natuur-dex', [NatuurDexController::class, 'index'])->name('natuur-dex.index');
+    Route::get('/cards/{card}', [CardController::class, 'show'])->name('cards.show');
 });
 
 Route::get('/test-layout', function () {
     return view('test-layout');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
