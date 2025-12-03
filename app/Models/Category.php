@@ -10,10 +10,12 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    public $timestamps = false;
+    protected $guarded = [];
 
-    public function items(): HasMany
+    public function items()
     {
-        return $this->hasMany(NatureItem::class);
+        return $this->hasMany(Card::class, 'category_id');
     }
+
 }

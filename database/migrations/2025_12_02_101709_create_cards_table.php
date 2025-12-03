@@ -11,15 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('properties')->nullable();
+            $table->string('name', 255);
+            $table->json('properties')->nullable();
             $table->text('description')->nullable();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            $table->string('image_url');
+
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+
+            $table->string('image_url', 2048)->nullable();
+
+
             $table->timestamps();
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
