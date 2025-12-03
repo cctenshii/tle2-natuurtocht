@@ -13,7 +13,7 @@ class NatuurDexController extends Controller
         // Haal alle categorieën op, en laad direct de bijbehorende items (eager loading)
         // We groeperen de items per subgroep binnen elke categorie
         $categories = Category::with(['items' => function ($query) {
-            $query->orderBy('number');
+            $query->orderBy('id');
         }])->get()->map(function ($category) {
             $category->grouped_items = $category->items->groupBy('sub_group');
             return $category;
