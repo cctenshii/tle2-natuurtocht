@@ -6,27 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-
         Schema::create('card_season', function (Blueprint $table) {
-            $table->bigInteger('card_id')->index();
-            $table->foreign('card_id')->references('id')->on('cards');
-            $table->bigInteger('season_id')->index();
-            $table->foreign('season_id')->references('id')->on('seasons');
+            $table->foreignId('card_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('season_id')->constrained()->cascadeOnDelete();
+
             $table->unique(['card_id', 'season_id']);
         });
-
-        Schema::enableForeignKeyConstraints();
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('card_season');

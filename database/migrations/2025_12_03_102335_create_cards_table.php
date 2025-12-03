@@ -16,10 +16,14 @@ return new class extends Migration
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->json('properties');
-            $table->text('description');
-            $table->bigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->json('properties')->nullable();
+            $table->text('description')->nullable();
+
+            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
+
+            $table->string('image_url', 2048);
+
+            $table->timestamps();
         });
 
         Schema::enableForeignKeyConstraints();
