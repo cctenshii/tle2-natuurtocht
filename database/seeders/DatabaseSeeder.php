@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
         // Roep alle seeders aan die je wilt uitvoeren
         $this->call([
             UserSeeder::class,
-            CategorySeeder::class,
-            NatureItemSeeder::class,
+           // CategorySeeder::class,
+           // NatureItemSeeder::class,
             ManualCardSeeder::class,
         ]);
     }
