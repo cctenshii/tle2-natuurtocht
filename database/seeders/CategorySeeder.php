@@ -1,16 +1,16 @@
 <?php
-
-namespace Database\Seeders;
-
-use App\Models\Category;
-use Illuminate\Database\Seeder;
-
-class CategorySeeder extends Seeder
-{
-    public function run(): void
-    {
-        $this->call([
-            ImportCardsFromCsvSeeder::class,
-        ]);
-    }
-}
+//
+//namespace Database\Seeders;
+//
+//use App\Models\Category;
+//use Illuminate\Database\Seeder;
+//
+//class CategorySeeder extends Seeder
+//{
+//    public function run(): void
+//    {
+//        $this->call([
+//            ImportCardsFromCsvSeeder::class,
+//        ]);
+//    }
+//}
