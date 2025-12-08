@@ -70,9 +70,9 @@
                                     @foreach($items as $item)
                                         <a href="{{ route('cards.show', $item->id) }}">
                                             <div @class([
-            'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
-            'shiny' => optional($item->pivot)->is_shiny,
-        ])>
+                                                    'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
+                                                    'shiny' => optional($item->pivot)->is_shiny,
+                                                ])>
                                                 <img src="{{ $item->image_url }}" alt="{{ $item->name }}"
                                                      class="mx-auto mb-2 rounded">
                                                 <span

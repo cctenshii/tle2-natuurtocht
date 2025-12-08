@@ -46,15 +46,28 @@
                     <p class="text-gray-500 text-sm">Kaartnummer: {{ $card->id }}</p>
 
                     <ul class="list-disc pl-5 mt-4 text-gray-700">
+                        <li class="font-bold">Seizoen: {{ $card->season->name ?? 'Onbekend' }}</li>
                         <li>{{ $card->description ?? 'Geen beschrijving beschikbaar.' }}</li>
                     </ul>
 
-                    <button
-                        class="mt-6 w-full bg-cyan-800 hover:bg-cyan-900 text-white font-semibold py-2 px-4 rounded-lg shadow">
-                        Maak foto
-                    </button>
+                    @if($card->unlocked)
+                        {{-- Extra info for unlocked cards --}}
+                        <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded">
+                            <h2 class="font-semibold text-green-800">Extra informatie</h2>
+                            <p class="text-gray-700 mt-2">{{ $card->extra_info ?? 'Geen extra informatie beschikbaar.' }}</p>
 
+                            <h3 class="font-semibold text-green-800 mt-4">Leuk weetje</h3>
+                            <p class="text-gray-700 mt-2">{{ $card->fun_fact ?? 'Geen weetje beschikbaar.' }}</p>
+                        </div>
+                    @else
+                        {{-- Button only if the card is locked --}}
+                        <button
+                            class="mt-6 w-full bg-cyan-800 hover:bg-cyan-900 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                            Maak foto
+                        </button>
+                    @endif
                 </div>
+
 
             </div>
         </main>
