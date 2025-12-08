@@ -16,7 +16,7 @@ class NatuurDexController extends Controller
             $query->orderBy('number');
         }, 'items.seasons'])->get()->map(function ($category) {
             // grouped_items zoals je blade verwacht: [subGroup => items]
-            $category->grouped_items = $category->items->groupBy(fn($item) => $item->sub_group);
+            $category->grouped_items = $category->items->groupBy(fn ($item) => $item->sub_group);
             return $category;
         });
 

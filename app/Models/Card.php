@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Card extends Model
 {
-    public $timestamps = false;
     protected $table = 'cards';
     protected $guarded = [];
+
+    public $timestamps = false;
+
     protected $casts = [
         'properties' => 'array',
     ];
+
 
     public function category(): BelongsTo
     {
@@ -25,6 +28,12 @@ class Card extends Model
     public function seasons(): BelongsToMany
     {
         return $this->belongsToMany(Season::class, 'card_season');
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(\App\Models\User::class, 'user_cards')
+            ->withPivot(['acquired_at', 'image_url', 'is_shiny']);
     }
 
     public function locations(): BelongsToMany
@@ -57,7 +66,10 @@ class Card extends Model
     protected function imageUrl(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ?: 'https://placehold.co/400x300/DDD/777?text=' . urlencode($this->name ?? 'Card')
+            get: fn ($value) =>
+            $value ?: 'https://placehold.co/400x300/DDD/777?text=' . urlencode($this->name ?? 'Card')
         );
     }
+
+
 }

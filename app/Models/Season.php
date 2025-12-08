@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Season extends Model
 {
-    public $timestamps = false;
     protected $guarded = [];
+
+    public $timestamps = false;
 
     public function cards(): BelongsToMany
     {
