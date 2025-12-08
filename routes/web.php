@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NatuurDexController;
+use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/natuur-dex', [NatuurDexController::class, 'index'])->name('natuur-dex.index');
+
+    Route::get('/cards/create', fn() => view('cards.create'))->name('cards.create');
+    Route::post('/cards/upload-photo', [PhotoController::class, 'store'])->name('cards.upload');
 });
 
 Route::get('/test-layout', function () {
