@@ -15,15 +15,13 @@ return new class extends Migration
 
         Schema::create('cards', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255);
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('title', 255);
             $table->json('properties')->nullable();
             $table->text('description')->nullable();
-
+            $table->string('rarity')->default('common');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-
             $table->string('image_url', 2048)->nullable();
-
-
             $table->timestamps();
         });
 

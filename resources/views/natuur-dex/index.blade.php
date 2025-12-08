@@ -63,6 +63,7 @@
                             @forelse($category->grouped_items as $subGroup => $items)
                                 <h3 class="text-lg font-bold text-gray-800 mb-2 mt-4">{{ $subGroup }}</h3>
                                 <div class="grid grid-cols-3 gap-4">
+                                    {{--                                    the cards yuhh vv--}}
                                     @foreach($items as $item)
                                         <a href="{{ route('cards.show', $item->id) }}">
                                             <div @class([
