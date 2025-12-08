@@ -50,16 +50,7 @@ class Card extends Model
     protected function subGroup(): Attribute
     {
         return Attribute::make(
-            get: function () {
-                $fromProps = $this->properties['seizoen'] ?? null;
-                if ($fromProps) return $fromProps;
-
-                $names = $this->relationLoaded('seasons')
-                    ? $this->seasons->pluck('name')->all()
-                    : [];
-
-                return $names ? implode(', ', $names) : 'Overig';
-            }
+            get: fn () => $this->properties['rijk'] ?? 'Overig'
         );
     }
 

@@ -11,13 +11,36 @@ class ManualCardSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
-            // 1) Ensure base seasons exist
+
+            // Helper: bepaal "rijk" (voor headings in UI)
+            $determineRijk = function (array $row): string {
+                $cat = mb_strtolower((string)($row['category'] ?? ''));
+
+                if ($cat === 'boom') return 'Bomenrijk';
+                if ($cat === 'schimmel') return 'Schimmelrijk';
+
+                $haystack = mb_strtolower(
+                    (($row['locatie'] ?? '') . ' ' . ($row['kenmerken'] ?? '') . ' ' . ($row['feitje'] ?? ''))
+                );
+
+                $waterWords = ['water', 'vijver', 'oever', 'plas', 'sloot', 'moeras', 'drijft', 'stilstaand'];
+                foreach ($waterWords as $w) {
+                    if (str_contains($haystack, $w)) {
+                        return 'Water- en oeverplanten';
+                    }
+                }
+
+
+                return 'Struikenrijk';
+            };
+
+
             $baseSeasons = ['Lente', 'Zomer', 'Herfst', 'Winter'];
             foreach ($baseSeasons as $name) {
                 DB::table('seasons')->updateOrInsert(['name' => $name], ['name' => $name]);
             }
 
-            // 2) Data (converted from your CSV)
+
             $cardsData = [
                 [
                     'name' => 'Brandnetel',
@@ -318,22 +341,9 @@ class ManualCardSeeder extends Seeder
                     'wrong2' => 'Hij is heel klein, kleiner dan een knikker',
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
-                [
-                    'name' => 'Zomereik (extra)',
-                    'category' => 'Boom',
-                    'season_text' => 'Herfst',
-                    'kenmerken' => 'Voorbeeldrecord (als je dit niet wilt: verwijder deze entry)',
-                    'locatie' => '',
-                    'feitje' => '',
-                    'question' => '',
-                    'correct' => '',
-                    'wrong1' => '',
-                    'wrong2' => '',
-                    'seasons' => ['Herfst'],
-                ],
             ];
 
-            // 3) Upsert everything
+
             foreach ($cardsData as $row) {
                 // Category
                 DB::table('categories')->updateOrInsert(
@@ -342,9 +352,10 @@ class ManualCardSeeder extends Seeder
                 );
                 $categoryId = DB::table('categories')->where('name', $row['category'])->value('id');
 
-                // Card
+
                 $properties = [
-                    'seizoen' => $row['season_text'] ?: null,      // keeps your old UI grouping working
+                    'rijk' => $determineRijk($row),
+                    'seizoen' => $row['season_text'] ?: null,
                     'feitje' => $row['feitje'] ?: null,
                     'kenmerken' => $row['kenmerken'] ?: null,
                     'locatie_text' => $row['locatie'] ?: null,
@@ -379,12 +390,12 @@ class ManualCardSeeder extends Seeder
                     }
                 }
 
-                // Locations pivot (card_location)
+
                 if (Schema::hasTable('card_location')) {
                     DB::table('card_location')->where('card_id', $cardId)->delete();
 
                     $loc = trim((string)($row['locatie'] ?? ''));
-                    if ($loc !== '') {
+                    if ($loc !== '' && Schema::hasTable('locations')) {
                         DB::table('locations')->updateOrInsert(['name' => $loc], ['name' => $loc]);
                         $locationId = DB::table('locations')->where('name', $loc)->value('id');
 
@@ -397,7 +408,7 @@ class ManualCardSeeder extends Seeder
                     }
                 }
 
-                // Quiz row (table name: "quiz")
+
                 if (Schema::hasTable('quiz')) {
                     $q = trim((string)($row['question'] ?? ''));
                     $correct = trim((string)($row['correct'] ?? ''));
