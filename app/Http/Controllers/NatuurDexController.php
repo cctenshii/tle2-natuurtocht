@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Carbon\Carbon;
@@ -9,54 +7,48 @@ use Illuminate\View\View;
 
 class NatuurDexController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        // Laad categorieën + items + seasons (voor sub_group fallback via seasons)
-        $categories = Category::with(['items' => function ($query) {
-            // Als "number" niet bestaat in je nieuwe schema, laat dit weg.
-            $query->orderBy('number');
-        }, 'items.seasons'])->get()->map(function ($category) {
-            // grouped_items zoals je blade verwacht: [subGroup => items]
-            $category->grouped_items = $category->items->groupBy(fn ($item) => $item->sub_group);
-            return $category;
-        });
+        // Seizoen bepalen (via query of automatisch)
+        $season = $request->get('season') ?? $this->getCurrentSeason();
 
-        // Deze data kan later uit een andere bron komen
+        // Categorieën + items filteren op seizoen
+        $categories = Category::with(['items' => function ($query) use ($season) {
+            $query->whereHas('seasons', fn($q) => $q->where('name', $season))
+                ->orderBy('number');
+        }, 'items.seasons'])
+            ->get()->map(function ($category) {
+                $category->grouped_items = $category->items->groupBy(fn($item) => $item->sub_group);
+                return $category;
+            }
+            );
+
+        //Locatie hardcoded
         $location = "Schiebroekse Polder";
+        $seasonStyles = $this->getSeasonStyles($season);
 
+        return view('natuur-dex.index', compact('categories', 'location', 'season', 'seasonStyles'));
+    }
 
-        // Huidig seizoen wordt bepaald obv huidige maand en meegestuurd naar de view
-        $month = Carbon::now()->month;
-        $season = match (true) {
+    private function getCurrentSeason(): string
+    {
+        $month = now()->month;
+        return match (true) {
             $month >= 3 && $month <= 5 => 'Lente',
             $month >= 6 && $month <= 8 => 'Zomer',
             $month >= 9 && $month <= 11 => 'Herfst',
             default => 'Winter',
         };
+    }
 
-        $seasonStyles = match ($season) {
-            'Lente' => [
-                'color' => 'text-green-600',
-                'icon' => 'icons.seed',
-            ],
-            'Zomer' => [
-                'color' => 'text-yellow-600',
-                'icon' => 'icons.sun',
-            ],
-            'Herfst' => [
-                'color' => 'text-orange-600',
-                'icon' => 'icons.leaf',
-            ],
-            'Winter' => [
-                'color' => 'text-blue-600',
-                'icon' => 'icons.snow',
-            ],
-            default => [
-                'color' => 'text-gray-600',
-                'icon' => 'icons.default',
-            ]
+    private function getSeasonStyles(string $season): array
+    {
+        return match ($season) {
+            'Lente' => ['color' => 'text-green-600', 'icon' => 'icons.seed',],
+            'Zomer' => ['color' => 'text-yellow-600', 'icon' => 'icons.sun',],
+            'Herfst' => ['color' => 'text-orange-600', 'icon' => 'icons.leaf',],
+            'Winter' => ['color' => 'text-blue-600', 'icon' => 'icons.snow',],
+            default => ['color' => 'text-gray-600', 'icon' => 'icons.default',]
         };
-
-        return view('natuur-dex.index', compact('categories', 'location', 'season', 'seasonStyles'));
     }
 }
