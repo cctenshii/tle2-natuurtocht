@@ -10,13 +10,20 @@ class CardController extends Controller
 {
     public function show(NatureItem $card)
     {
+        $user = auth()->user();
+
+        // Controleer of de gebruiker deze kaart heeft (via de user_cards pivot)
+        $owned = $user ? $user->cards()->where('cards.id', $card->id)->exists() : false;
+
         $location = "Schiebroekse Polder";
         $season = "Herfst";
 
         return view('cards.show', [
             'card' => $card,
             'location' => $location,
-            'season' => $season
+            'season' => $season,
+            'owned' => $owned,
         ]);
     }
+
 }
