@@ -9,8 +9,8 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        Category::create(['name' => 'Planten']);
-        Category::create(['name' => 'Schimmels']);
-        Category::create(['name' => 'Bomen']);
+        $this->call([
+            ImportCardsFromCsvSeeder::class,
+        ]);
     }
 }

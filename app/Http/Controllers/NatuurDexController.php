@@ -10,12 +10,13 @@ class NatuurDexController extends Controller
 {
     public function index(): View
     {
-        // Haal alle categorieën op, en laad direct de bijbehorende items (eager loading)
-        // We groeperen de items per subgroep binnen elke categorie
+        // Laad categorieën + items + seasons (voor sub_group fallback via seasons)
         $categories = Category::with(['items' => function ($query) {
+            // Als "number" niet bestaat in je nieuwe schema, laat dit weg.
             $query->orderBy('number');
-        }])->get()->map(function ($category) {
-            $category->grouped_items = $category->items->groupBy('sub_group');
+        }, 'items.seasons'])->get()->map(function ($category) {
+            // grouped_items zoals je blade verwacht: [subGroup => items]
+            $category->grouped_items = $category->items->groupBy(fn ($item) => $item->sub_group);
             return $category;
         });
 

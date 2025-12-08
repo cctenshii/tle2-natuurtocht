@@ -10,7 +10,9 @@ class NatureItem extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id', 'number', 'name', 'sub_group', 'image_url'];
+    protected $table = 'cards';
+
+    protected $fillable = ['name', 'properties', 'description', 'category_id', 'image_url'];
 
     public function category(): BelongsTo
     {
