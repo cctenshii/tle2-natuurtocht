@@ -27,7 +27,16 @@
                         x-transition
                         class="flex items-center gap-1 font-semibold {{ $seasonStyles['color'] }}">
 
-                       <span>{{ $season }}</span>
+                       <form method="GET" id="seasonForm" class="mb-4">
+                           <select name="season" id="seasonSelect"
+                                   onchange="document.getElementById('seasonForm').submit();">
+                               @foreach (['Lente', 'Zomer', 'Herfst', 'Winter'] as $s)
+                                   <option value="{{ $s }}" {{ $s === $season ? 'selected' : '' }}>
+                                       {{ $s }}
+                                   </option>
+                               @endforeach
+                           </select>
+                       </form>
 
                        @include($seasonStyles['icon'])
                    </div>
