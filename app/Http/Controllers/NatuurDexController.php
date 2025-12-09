@@ -27,15 +27,13 @@ class NatuurDexController extends Controller
         //Locatie hardcoded
         $location = "Schiebroekse Polder";
 
-        //Percentage berekening van verzamelde kaartjes per locatie
-        $totalCards = Card::where('location', $location)->count();
+        $totalCards = Card::count();
 
-        $collectedCards = Card::where('location', $location)
-            ->whereHas('users', fn($q) => $q->where('user_id', auth()->id()))
-            ->count();
+        $collectedCards = Card::whereHas('users', fn($q) => $q->where('user_id', auth()->id())
+        )->count();
 
         $percentage = $totalCards > 0
-            ? round(($collectedCards / $totalCards) * 100, 2)
+            ? round(($collectedCards / $totalCards) * 100)
             : 0;
 
         $seasonStyles = $this->getSeasonStyles($season);
