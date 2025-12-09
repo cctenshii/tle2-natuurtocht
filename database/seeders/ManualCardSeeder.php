@@ -30,20 +30,19 @@ class ManualCardSeeder extends Seeder
                     }
                 }
 
-
                 return 'Struikenrijk';
             };
 
-
+            // Base seasons
             $baseSeasons = ['Lente', 'Zomer', 'Herfst', 'Winter'];
-            foreach ($baseSeasons as $name) {
-                DB::table('seasons')->updateOrInsert(['name' => $name], ['name' => $name]);
+            foreach ($baseSeasons as $seasonName) {
+                DB::table('seasons')->updateOrInsert(['name' => $seasonName], ['name' => $seasonName]);
             }
 
-
+            // Data
             $cardsData = [
                 [
-                    'name' => 'Brandnetel',
+                    'title' => 'Brandnetel',
                     'category' => 'Plant',
                     'season_text' => 'Lente, Zomer en Herfst',
                     'kenmerken' => 'Heeft groene bladeren met brandhaartjes die prikken',
@@ -56,7 +55,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Tulp',
+                    'title' => 'Tulp',
                     'category' => 'Bloem',
                     'season_text' => 'Lente',
                     'kenmerken' => 'Grote bloem in allerlei kleuren',
@@ -69,7 +68,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente'],
                 ],
                 [
-                    'name' => 'Klaproos',
+                    'title' => 'Klaproos',
                     'category' => 'Bloem',
                     'season_text' => 'Lente en Zomer',
                     'kenmerken' => 'Rode, dunne blaadjes en een donker hartje',
@@ -82,7 +81,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer'],
                 ],
                 [
-                    'name' => 'Vlinderstruik',
+                    'title' => 'Vlinderstruik',
                     'category' => 'Bloem',
                     'season_text' => 'Zomer en Herfst',
                     'kenmerken' => 'Grote paarse, roze of witte bloemtrossen',
@@ -95,7 +94,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Hortensia',
+                    'title' => 'Hortensia',
                     'category' => 'Bloem',
                     'season_text' => 'Zomer en Herfst',
                     'kenmerken' => 'Grote bolvormige bloemen in blauw, roze of wit',
@@ -108,7 +107,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Waterlelie',
+                    'title' => 'Waterlelie',
                     'category' => 'Bloem',
                     'season_text' => 'Zomer',
                     'kenmerken' => 'Drijft op het water met ronde bladeren',
@@ -121,7 +120,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer'],
                 ],
                 [
-                    'name' => 'Narcis',
+                    'title' => 'Narcis',
                     'category' => 'Bloem',
                     'season_text' => 'Lente',
                     'kenmerken' => 'Gele of witte bloem met een "trompet" in het midden',
@@ -134,7 +133,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente'],
                 ],
                 [
-                    'name' => 'Boterbloem',
+                    'title' => 'Boterbloem',
                     'category' => 'Bloem',
                     'season_text' => 'Lente en Zomer',
                     'kenmerken' => 'Kleine, glanzende, gele bloemetjes',
@@ -147,7 +146,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer'],
                 ],
                 [
-                    'name' => 'Hyacint',
+                    'title' => 'Hyacint',
                     'category' => 'Bloem',
                     'season_text' => 'Lente',
                     'kenmerken' => 'Geurige bloemen die dicht op elkaar zitten op 1 stengel',
@@ -160,7 +159,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente'],
                 ],
                 [
-                    'name' => 'Vingerhoedskruid',
+                    'title' => 'Vingerhoedskruid',
                     'category' => 'Bloem',
                     'season_text' => 'Lente en Zomer',
                     'kenmerken' => 'Lange stengel met buisvormige paarse of roze bloemen | LET OP GIFTIG',
@@ -173,7 +172,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer'],
                 ],
                 [
-                    'name' => 'Appelboom',
+                    'title' => 'Appelboom',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Lente: bloeien, Zomer: groeien vruchten, Herfst: oogsten, Winter: rust)',
                     'kenmerken' => 'Roze-witte bloemetjes in de lente, Appels groeien in de zomer',
@@ -186,7 +185,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst', 'Winter'],
                 ],
                 [
-                    'name' => 'Tamme kastanjeboom',
+                    'title' => 'Tamme kastanjeboom',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Zomer: bloeien, Herfst: vruchten vallen)',
                     'kenmerken' => 'Lange bladeren met tandjes aan de rand',
@@ -199,7 +198,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Kersenbloesem',
+                    'title' => 'Kersenbloesem',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Lente: bloeien de bloemen)',
                     'kenmerken' => 'Heel veel roze of witte bloemetjes in de lente',
@@ -212,7 +211,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente'],
                 ],
                 [
-                    'name' => 'Eik',
+                    'title' => 'Eik',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Lente: bloeien, Zomer: groene bladeren, Herfst: herfstkleur en eikels vallen)',
                     'kenmerken' => 'Herkenbaar aan de gelobde bladeren en eikels',
@@ -225,7 +224,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Beuk',
+                    'title' => 'Beuk',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Lente: rode bladeren, Zomer: groen bladerdak, Herfst: bruine bladeren en vallen af of blijven, Winter: kaal)',
                     'kenmerken' => 'Gladde, grijze stam en stevige bladeren',
@@ -238,7 +237,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst', 'Winter'],
                 ],
                 [
-                    'name' => 'Dennenboom',
+                    'title' => 'Dennenboom',
                     'category' => 'Boom',
                     'season_text' => 'Alle seizoenen (Hele jaar groen, Herfst: produceren dennenappels, Winter: zaden verspreiden)',
                     'kenmerken' => 'Heeft naalden in plaats van bladeren en blijft het hele jaar groen',
@@ -251,7 +250,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Herfst', 'Winter'],
                 ],
                 [
-                    'name' => 'Vliegenzwam',
+                    'title' => 'Vliegenzwam',
                     'category' => 'Schimmel',
                     'season_text' => 'Herfst',
                     'kenmerken' => 'Rode hoed met witte stippen -- bekend uit sprookjes',
@@ -264,7 +263,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Herfst'],
                 ],
                 [
-                    'name' => 'Aardappelbovist',
+                    'title' => 'Aardappelbovist',
                     'category' => 'Schimmel',
                     'season_text' => 'Zomer tot begin Winter',
                     'kenmerken' => 'Ronde bruine bol',
@@ -277,7 +276,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Winter'],
                 ],
                 [
-                    'name' => 'Parasolzwam',
+                    'title' => 'Parasolzwam',
                     'category' => 'Schimmel',
                     'season_text' => 'Late Zomer en Herfst',
                     'kenmerken' => 'Ziet eruit als een kleine parasol op een lange steel',
@@ -290,7 +289,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Tonderzwam',
+                    'title' => 'Tonderzwam',
                     'category' => 'Schimmel',
                     'season_text' => 'Alle seizoenen',
                     'kenmerken' => 'Hard en lijkt op een hoef aan de stam van een boom',
@@ -303,7 +302,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst', 'Winter'],
                 ],
                 [
-                    'name' => 'Eekhoorntjesbrood',
+                    'title' => 'Eekhoorntjesbrood',
                     'category' => 'Schimmel',
                     'season_text' => 'Alle seizoenen',
                     'kenmerken' => 'Dikke paddenstoel met bruine hoed',
@@ -316,7 +315,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Lente', 'Zomer', 'Herfst', 'Winter'],
                 ],
                 [
-                    'name' => 'Rodekoolzwam',
+                    'title' => 'Rodekoolzwam',
                     'category' => 'Schimmel',
                     'season_text' => 'Late Zomer en Herfst',
                     'kenmerken' => 'Paarse paddenstoel die een beetje glimt',
@@ -329,7 +328,7 @@ class ManualCardSeeder extends Seeder
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
                 [
-                    'name' => 'Reuzenbovist',
+                    'title' => 'Reuzenbovist',
                     'category' => 'Schimmel',
                     'season_text' => 'Zomer en Herfst',
                     'kenmerken' => 'Een enorme witte bol, soms zo groot als een voetbal',
@@ -343,7 +342,6 @@ class ManualCardSeeder extends Seeder
                 ],
             ];
 
-
             foreach ($cardsData as $row) {
                 // Category
                 DB::table('categories')->updateOrInsert(
@@ -352,7 +350,7 @@ class ManualCardSeeder extends Seeder
                 );
                 $categoryId = DB::table('categories')->where('name', $row['category'])->value('id');
 
-
+                // Properties
                 $properties = [
                     'rijk' => $determineRijk($row),
                     'seizoen' => $row['season_text'] ?: null,
@@ -361,10 +359,12 @@ class ManualCardSeeder extends Seeder
                     'locatie_text' => $row['locatie'] ?: null,
                 ];
 
-                $imageUrl = 'https://placehold.co/400x300/DDD/777?text=' . rawurlencode($row['name']);
+                // Placeholder image uses title
+                $imageUrl = 'https://placehold.co/400x300/DDD/777?text=' . rawurlencode($row['title']);
 
+                // Card (title instead of name)
                 DB::table('cards')->updateOrInsert(
-                    ['name' => $row['name']],
+                    ['title' => $row['title']],
                     [
                         'category_id' => $categoryId,
                         'description' => $row['kenmerken'] ?: ($row['feitje'] ?: null),
@@ -373,7 +373,7 @@ class ManualCardSeeder extends Seeder
                     ]
                 );
 
-                $cardId = DB::table('cards')->where('name', $row['name'])->value('id');
+                $cardId = DB::table('cards')->where('title', $row['title'])->value('id');
 
                 // Seasons pivot (card_season)
                 if (Schema::hasTable('card_season')) {
@@ -390,7 +390,7 @@ class ManualCardSeeder extends Seeder
                     }
                 }
 
-
+                // Locations pivot (card_location)
                 if (Schema::hasTable('card_location')) {
                     DB::table('card_location')->where('card_id', $cardId)->delete();
 
@@ -408,25 +408,28 @@ class ManualCardSeeder extends Seeder
                     }
                 }
 
-
+                // Quiz (table name: quiz)
                 if (Schema::hasTable('quiz')) {
                     $q = trim((string)($row['question'] ?? ''));
                     $correct = trim((string)($row['correct'] ?? ''));
 
                     if ($q !== '' && $correct !== '') {
                         $answers = [
-                            ['id' => 'a1', 'text' => $correct, 'correct' => true],
+                            ['id' => '1', 'text' => $correct, 'correct' => true],
                         ];
 
                         $w1 = trim((string)($row['wrong1'] ?? ''));
                         $w2 = trim((string)($row['wrong2'] ?? ''));
 
-                        if ($w1 !== '') $answers[] = ['id' => 'a2', 'text' => $w1, 'correct' => false];
-                        if ($w2 !== '') $answers[] = ['id' => 'a3', 'text' => $w2, 'correct' => false];
+                        if ($w1 !== '') $answers[] = ['id' => '2', 'text' => $w1, 'correct' => false];
+                        if ($w2 !== '') $answers[] = ['id' => '3', 'text' => $w2, 'correct' => false];
 
                         DB::table('quiz')->updateOrInsert(
                             ['card_id' => $cardId, 'question_text' => $q],
-                            ['answers' => json_encode($answers, JSON_UNESCAPED_UNICODE), 'explanation' => null]
+                            [
+                                'answers' => json_encode($answers, JSON_UNESCAPED_UNICODE),
+                                'explanation' => null,
+                            ]
                         );
                     }
                 }
