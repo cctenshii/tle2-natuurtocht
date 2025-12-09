@@ -72,22 +72,28 @@
                             @forelse($category->grouped_items as $subGroup => $items)
                                 <h3 class="text-lg font-bold text-gray-800 mb-2 mt-4">{{ $subGroup }}</h3>
                                 <div class="grid grid-cols-3 gap-4">
-                                    {{--                                    the cards yuhh vv--}}
+
                                     @foreach($items as $item)
+                                        @php
+                                            // ✅ pivot komt nu via items.users (gefilterd op ingelogde user)
+                                            $ownership = $item->users->first()?->pivot;
+                                            $isShiny = (bool) optional($ownership)->is_shiny;
+                                        @endphp
+
                                         <a href="{{ route('cards.show', $item->id) }}">
                                             <div @class([
-            'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
-            'shiny' => optional($item->pivot)->is_shiny,
-        ])>
-                                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"
-                                                     class="mx-auto mb-2 rounded">
-                                                <span
-                                                    class="block text-xs font-bold text-gray-500">{{ $item->number }}</span>
-                                                <span
-                                                    class="block text-sm font-semibold text-gray-800">{{ $item->title }}</span>
+                                        'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
+                                        'shiny' => $isShiny,
+                                    ])>
+                                                <img src="{{ $item->display_image_url }}" alt="{{ $item->title }}" class="mx-auto mb-2 rounded">
+
+
+                                                <span class="block text-xs font-bold text-gray-500">{{ $item->number }}</span>
+                                                <span class="block text-sm font-semibold text-gray-800">{{ $item->title }}</span>
                                             </div>
                                         </a>
                                     @endforeach
+
                                 </div>
                             @empty
                                 <p class="text-center text-gray-500 p-4">Geen items gevonden in deze categorie.</p>
@@ -98,6 +104,7 @@
 
             </div>
         </main>
+
 
         <!-- 3. Vaste Footer -->
         <footer class="absolute bottom-0 left-0 right-0 bg-cyan-800 text-white z-10">

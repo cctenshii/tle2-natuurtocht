@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
            // CategorySeeder::class,
            // NatureItemSeeder::class,
             ManualCardSeeder::class,
+            UserCardSeeder::class,
         ]);
     }
 }

@@ -8,15 +8,25 @@ use Illuminate\Http\Request;
 
 class CardController extends Controller
 {
-    public function show(NatureItem $card)
+
+    public function show(Card $card)
     {
+        $user = auth()->user();
+
+        $ownedCard = $user?->cards()->where('cards.id', $card->id)->first();
+
+        $owned = (bool) $ownedCard;
+
         $location = "Schiebroekse Polder";
         $season = "Herfst";
 
         return view('cards.show', [
             'card' => $card,
+            'ownedCard' => $ownedCard, // <-- belangrijk
             'location' => $location,
-            'season' => $season
+            'season' => $season,
+            'owned' => $owned,
         ]);
     }
+
 }
