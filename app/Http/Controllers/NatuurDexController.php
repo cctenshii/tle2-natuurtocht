@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Category;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -25,9 +26,29 @@ class NatuurDexController extends Controller
 
         //Locatie hardcoded
         $location = "Schiebroekse Polder";
+
+        //Percentage berekening van verzamelde kaartjes per locatie
+        $totalCards = Card::where('location', $location)->count();
+
+        $collectedCards = Card::where('location', $location)
+            ->whereHas('users', fn($q) => $q->where('user_id', auth()->id()))
+            ->count();
+
+        $percentage = $totalCards > 0
+            ? round(($collectedCards / $totalCards) * 100, 2)
+            : 0;
+
         $seasonStyles = $this->getSeasonStyles($season);
 
-        return view('natuur-dex.index', compact('categories', 'location', 'season', 'seasonStyles'));
+        return view('natuur-dex.index', compact(
+            'categories',
+            'location',
+            'season',
+            'seasonStyles',
+            'percentage',
+            'totalCards',
+            'collectedCards'
+        ));
     }
 
     private function getCurrentSeason(): string

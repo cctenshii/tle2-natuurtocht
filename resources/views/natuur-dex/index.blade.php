@@ -110,6 +110,7 @@
                     </svg>
                     <span>Profiel</span>
                 </a>
+                <h1 class="text-center">Voltooid: <br>{{ $percentage }}%</h1>
                 <a href="#" class="flex flex-col items-center gap-1 text-sm font-semibold">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
                         <path
