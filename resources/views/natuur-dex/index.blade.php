@@ -79,12 +79,12 @@
             'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
             'shiny' => optional($item->pivot)->is_shiny,
         ])>
-                                                <img src="{{ $item->image_url }}" alt="{{ $item->name }}"
+                                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"
                                                      class="mx-auto mb-2 rounded">
                                                 <span
                                                     class="block text-xs font-bold text-gray-500">{{ $item->number }}</span>
                                                 <span
-                                                    class="block text-sm font-semibold text-gray-800">{{ $item->name }}</span>
+                                                    class="block text-sm font-semibold text-gray-800">{{ $item->title }}</span>
                                             </div>
                                         </a>
                                     @endforeach

@@ -19,8 +19,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/natuur-dex', [NatuurDexController::class, 'index'])->name('natuur-dex.index');
     Route::get('/cards/{card}', [CardController::class, 'show'])->name('cards.show');
 
-    Route::get('/cards/create', fn() => view('cards.create'))->name('cards.create');
-    Route::post('/cards/upload-photo', [PhotoController::class, 'store'])->name('cards.upload');
+    Route::post('/cards/{card}/upload-photo', [PhotoController::class, 'store'])->name('cards.upload');
 });
 
 Route::get('/test-layout', function () {

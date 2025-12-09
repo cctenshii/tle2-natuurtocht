@@ -7,56 +7,69 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class PhotoController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Update the photo for a specific card.
      *
      * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Card $card
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, Card $card)
     {
-        try {
-            $request->validate([
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
+        // Manual validation for AJAX request
+        $validator = Validator::make($request->all(), [
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-            // Store the image
-            $path = $request->file('image')->store('public/card-photos');
+        // If validation fails, return a proper JSON response
+        if ($validator->fails()) {
+            Log::error('Validatiefout bij foto-upload voor kaart ' . $card->id . ': ' . $validator->errors()->first());
+            return response()->json([
+                'message' => 'De foto is niet geldig. Zorg dat het een afbeelding is (jpg, png) en niet groter dan 2MB.',
+                'errors' => $validator->errors()
+            ], 422); // 422 Unprocessable Entity
+        }
+
+        try {
+            // Delete the old image if it exists and is not a placeholder
+            if ($card->image_url && !str_starts_with($card->image_url, 'http')) {
+                Storage::disk('public')->delete($card->image_url);
+            }
+
+            // Store the new image in 'storage/app/public/card-photos'
+            // The store method returns 'card-photos/filename.jpg'
+            $path = $request->file('photo')->store('card-photos', 'public');
             if (!$path) {
                 throw new \Exception("Kon het afbeeldingsbestand niet opslaan.");
             }
 
-            $url = Storage::url($path);
+            // Update the card with the new relative path
+            $card->image_url = $path;
+            $card->save();
 
-            // Create a new card for the user
-            Card::create([
-                'user_id' => Auth::id(),
-                'title' => 'Nieuwe Vangst', // Tijdelijke titel
-                'description' => 'Beschrijving volgt nog.', // Tijdelijke beschrijving
-                'image_url' => $url,
-                'rarity' => 'common', // Standaard zeldzaamheid
-                'category_id' => 1, // TIJDELIJK: Standaard categorie (bv. 'Planten')
-            ]);
+            // Add the card to the user's collection if not already there
+            Auth::user()->cards()->syncWithoutDetaching($card->id);
 
             // Flash the success message to the session
-            session()->flash('success', 'Kaart succesvol aangemaakt!');
+            session()->flash('success', 'Foto succesvol geüpload en gekoppeld aan de kaart!');
 
-            // For an AJAX request, a JSON response is better.
+            // Return a JSON response with the redirect URL
             return response()->json([
-                'message' => 'Kaart succesvol aangemaakt!',
-                'redirect_url' => route('dashboard')
+                'message' => 'Foto succesvol geüpload!',
+                'redirect_url' => route('cards.show', $card)
             ]);
 
         } catch (\Exception $e) {
             // Log the real error for debugging
-            Log::error('Fout bij uploaden van foto: ' . $e->getMessage());
+            Log::error('Fout bij uploaden van foto voor kaart ' . $card->id . ': ' . $e->getMessage());
 
             // Return a JSON response with a user-friendly error message
             return response()->json([
-                'message' => 'De upload is mislukt op de server. Controleer de logs voor details.'
+                'message' => 'De upload is mislukt op de server. Probeer het opnieuw.'
             ], 500);
         }
     }

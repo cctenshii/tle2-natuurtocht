@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -11,6 +12,12 @@ class ManualCardSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
+            // Get the first user to assign cards to.
+            $user = User::first();
+            if (!$user) {
+                $this->command->error('No users found in the database. Please run UserSeeder first.');
+                return;
+            }
 
             // Helper: bepaal "rijk" (voor headings in UI)
             $determineRijk = function (array $row): string {
@@ -364,8 +371,9 @@ class ManualCardSeeder extends Seeder
                 $imageUrl = 'https://placehold.co/400x300/DDD/777?text=' . rawurlencode($row['name']);
 
                 DB::table('cards')->updateOrInsert(
-                    ['name' => $row['name']],
+                    ['title' => $row['name']],
                     [
+                        'user_id' => $user->id,
                         'category_id' => $categoryId,
                         'description' => $row['kenmerken'] ?: ($row['feitje'] ?: null),
                         'properties' => json_encode($properties, JSON_UNESCAPED_UNICODE),
@@ -373,7 +381,7 @@ class ManualCardSeeder extends Seeder
                     ]
                 );
 
-                $cardId = DB::table('cards')->where('name', $row['name'])->value('id');
+                $cardId = DB::table('cards')->where('title', $row['name'])->value('id');
 
                 // Seasons pivot (card_season)
                 if (Schema::hasTable('card_season')) {
