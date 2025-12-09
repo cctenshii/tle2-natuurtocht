@@ -8,13 +8,12 @@
         <style>
             .safe-area-padding {
                 padding-top: 100px; /* Hoogte van de header */
-                padding-bottom: 80px; /* Hoogte van de footer */
             }
         </style>
     @endpush
 
     <!-- Mobiele Container -->
-    <div class="w-full max-w-sm mx-auto h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col"
+    <div class="h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col"
          x-data="{openAccordion: {{ $categories->first()->id ?? 'null' }}}">
        <x-slot:header>
            <div

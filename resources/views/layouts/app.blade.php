@@ -21,17 +21,19 @@
     @stack('styles')
 </head>
     <body class="m-0">
-<header class="border-b shadow-lg">
-    {{ $header }}
-</header>
+    <div class="relative max-w-sm mx-auto">
+        <header class="border-b shadow-lg">
+            {{ $header }}
+        </header>
 
-{{ $slot }}
+        {{ $slot }}
 
-<footer class="">
-    <div class="flex justify-between items-center m-4">
-        <img src="{{ asset('images/natuurmonumenten-logo.png') }}" alt="" class="w-1/2">
-        <img src="{{ asset('images/cbf-erkend.png') }}" alt="" class="w-1/4">
-        </div>
-</footer>
+        <footer class="">
+            <div class="flex justify-between items-center m-4">
+                <img src="{{ asset('images/natuurmonumenten-logo.png') }}" alt="" class="w-1/2">
+                <img src="{{ asset('images/cbf-erkend.png') }}" alt="" class="w-1/4">
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
