@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -11,6 +12,12 @@ class ManualCardSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function () {
+            // Get the first user to assign cards to.
+            $user = User::first();
+            if (!$user) {
+                $this->command->error('No users found in the database. Please run UserSeeder first.');
+                return;
+            }
 
             // Helper: bepaal "rijk" (voor headings in UI)
             $determineRijk = function (array $row): string {

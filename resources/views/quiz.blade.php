@@ -18,8 +18,9 @@
     <div style="visibility: hidden; position: absolute"><!--Hidden elements-->
         <p id="answerNum">{{$setAnswerId}}</p>
         <!-- -1 isn't best way to solve but works for now-->
-        <p id="answerExplanation">//Explanation</p>
+        <p id="answerExplanation"></p>
         <!--🔴 Dit moet nog een 'if empty' zodat er of text is of de daadwerkelijke explanation-->
+        <!--🔴 Als het goed is geklikt moet de kaart shiny worden (miss different btns)-->
     </div>
     <section style="margin-top: 6vh;">
         <h1 style="font-size: 2rem;">Upload gelukt!</h1>
@@ -27,7 +28,7 @@
         <p style="margin-left: 15vw; margin-right: 15vw;">Beantwoord de vraag juist voor een glimmende kaart!</p>
     </section>
     <section style="margin-top: 3vh;">
-        <form action="{{ route('index') }}" method="GET">
+        <form action="{{ route('index') }}" method="GET"> <!--Post to page that changes card data-->
             <h2 style="margin-bottom: 2vh;">{{$data->question_text}}</h2>
             <div style="display: flex; flex-direction: column; gap: 2vh;">
                 @foreach($answersArray as $question)
@@ -49,7 +50,7 @@
         let allInputButtons = document.getElementsByClassName("userInput");
 
         //Get data from php
-        let rightButton = parseInt(document.getElementById("answerNum").innerHTML); //which is the right button (id of correct one must be given)
+        let rightButton = parseInt(document.getElementById("answerNum").innerHTML);
         let explanation = document.getElementById("answerExplanation").innerHTML;
         //Get the explanation if it exists (check is in init)
 

@@ -16,24 +16,33 @@
     <!-- Mobiele Container -->
     <div class="w-full max-w-sm mx-auto h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col"
          x-data="{openAccordion: {{ $categories->first()->id ?? 'null' }}}">
-        <x-slot:header>
-            <header class="absolute top-0 left-0 right-0 bg-white z-10 shadow-md">
-                <div class="p-4 border-b border-gray-200">
-                    <h1 class="text-2xl font-extrabold text-blue-600 text-center">Natuur kaart dex</h1>
-                </div>
-                <div class="p-2 flex justify-between items-center bg-gray-50">
-                    <span class="font-bold text-gray-700">{{ $location }}</span>
-                    <div x-show="openAccordion === {{ $categories->first()->id ?? 'null' }}"
-                         x-transition
-                         class="flex items-center gap-1 font-semibold {{ $seasonStyles['color'] }}">
+       <x-slot:header>
+           <header class="absolute top-0 left-0 right-0 bg-white z-10 shadow-md">
+               <div class="p-4 border-b border-gray-200">
+                   <h1 class="text-2xl font-extrabold text-blue-600 text-center">Natuur kaart dex</h1>
+               </div>
+               <div class="p-2 flex justify-between items-center bg-gray-50">
+                   <span class="font-bold text-gray-700">{{ $location }}</span>
+                   <div x-show="openAccordion === {{ $categories->first()->id ?? 'null' }}"
+                        x-transition
+                        class="flex items-center gap-1 font-semibold {{ $seasonStyles['color'] }}">
 
-                        <span>{{ $season }}</span>
+                       <form method="GET" id="seasonForm" class="mb-4">
+                           <select name="season" id="seasonSelect"
+                                   onchange="document.getElementById('seasonForm').submit();">
+                               @foreach (['Lente', 'Zomer', 'Herfst', 'Winter'] as $s)
+                                   <option value="{{ $s }}" {{ $s === $season ? 'selected' : '' }}>
+                                       {{ $s }}
+                                   </option>
+                               @endforeach
+                           </select>
+                       </form>
 
-                        @include($seasonStyles['icon'])
-                    </div>
-                </div>
-            </header>
-        </x-slot:header>
+                       @include($seasonStyles['icon'])
+                   </div>
+               </div>
+           </header>
+       </x-slot:header>
 
         <!-- 2. Scrollbare Content Sectie -->
         <main class="flex-1 overflow-y-auto safe-area-padding">

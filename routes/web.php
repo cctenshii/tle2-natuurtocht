@@ -15,6 +15,8 @@ Route::get('/dashboard', function () {
 Route::get('/quiz/{id}', [\App\Http\Controllers\QuizController::class, 'showQuiz'])
     ->name('quiz');
 
+Route::post('/cards/{id}', [CardController::class, 'makeCardShiny'])
+    ->name('makeShiny');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,8 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/natuur-dex', [NatuurDexController::class, 'index'])->name('natuur-dex.index');
     Route::get('/cards/{card}', [CardController::class, 'show'])->name('cards.show');
 
-    Route::get('/cards/create', fn() => view('cards.create'))->name('cards.create');
-    Route::post('/cards/upload-photo', [PhotoController::class, 'store'])->name('cards.upload');
+    Route::post('/cards/{card}/upload-photo', [PhotoController::class, 'store'])->name('cards.upload');
 });
 
 Route::get('/test-layout', function () {

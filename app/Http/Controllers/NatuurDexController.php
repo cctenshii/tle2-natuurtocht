@@ -2,29 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Card;
 use App\Models\Category;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class NatuurDexController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $userId = Auth::id(); // null als niet ingelogd
 
+        // Seizoen bepalen (via query of automatisch)
+        $season = $request->get('season') ?? $this->getCurrentSeason();
+
+        // Categorieën + items filteren op seizoen + pivot van ingelogde user mee laden
         $categories = Category::with([
-            'items' => function ($query) {
-                $query->orderBy('number'); // als number bestaat
+            'items' => function ($query) use ($season) {
+                $query->whereHas('seasons', fn ($q) => $q->where('name', $season))
+                    ->orderBy('number'); // als number bestaat
             },
             'items.seasons',
-            // 👇 dit is de key: laad ownership pivot van de ingelogde user mee
             'items.users' => function ($q) use ($userId) {
                 if ($userId) {
-                    $q->where('users.id', $userId);
+                    $q->where('users.id', $userId); // alleen pivot van deze user
                 } else {
-                    // niet ingelogd => laad niets (pivot blijft leeg)
-                    $q->whereRaw('1 = 0');
+                    $q->whereRaw('1 = 0'); // niet ingelogd => geen users relation laden
                 }
             },
         ])->get()->map(function ($category) {
@@ -32,24 +36,55 @@ class NatuurDexController extends Controller
             return $category;
         });
 
+        // Locatie hardcoded
         $location = "Schiebroekse Polder";
 
-        $month = Carbon::now()->month;
-        $season = match (true) {
+        // Progress: maak het logisch per geselecteerd seizoen
+        $totalCards = Card::whereHas('seasons', fn ($q) => $q->where('name', $season))->count();
+
+        $collectedCards = $userId
+            ? Card::whereHas('seasons', fn ($q) => $q->where('name', $season))
+                ->whereHas('users', fn ($q) => $q->where('users.id', $userId))
+                ->count()
+            : 0;
+
+        $percentage = $totalCards > 0
+            ? round(($collectedCards / $totalCards) * 100)
+            : 0;
+
+        $seasonStyles = $this->getSeasonStyles($season);
+
+        return view('natuur-dex.index', compact(
+            'categories',
+            'location',
+            'season',
+            'seasonStyles',
+            'percentage',
+            'totalCards',
+            'collectedCards'
+        ));
+    }
+
+    private function getCurrentSeason(): string
+    {
+        $month = now()->month;
+
+        return match (true) {
             $month >= 3 && $month <= 5 => 'Lente',
             $month >= 6 && $month <= 8 => 'Zomer',
             $month >= 9 && $month <= 11 => 'Herfst',
             default => 'Winter',
         };
+    }
 
-        $seasonStyles = match ($season) {
+    private function getSeasonStyles(string $season): array
+    {
+        return match ($season) {
             'Lente' => ['color' => 'text-green-600', 'icon' => 'icons.seed'],
             'Zomer' => ['color' => 'text-yellow-600', 'icon' => 'icons.sun'],
             'Herfst' => ['color' => 'text-orange-600', 'icon' => 'icons.leaf'],
             'Winter' => ['color' => 'text-blue-600', 'icon' => 'icons.snow'],
             default => ['color' => 'text-gray-600', 'icon' => 'icons.default'],
         };
-
-        return view('natuur-dex.index', compact('categories', 'location', 'season', 'seasonStyles'));
     }
 }

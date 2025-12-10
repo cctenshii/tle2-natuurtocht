@@ -47,21 +47,21 @@ class NatureItem extends Model
         );
     }
 
-    protected function rijk(): Attribute
+    protected function realm(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->properties['rijk'] ?? null
         );
     }
 
-    protected function locatieText(): Attribute
+    protected function locationText(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->properties['locatie_text'] ?? null
         );
     }
 
-    protected function feitje(): Attribute
+    protected function fact(): Attribute
     {
         return Attribute::make(
             get: fn () => $this->properties['feitje'] ?? null
