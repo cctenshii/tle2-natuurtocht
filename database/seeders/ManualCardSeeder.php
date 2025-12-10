@@ -25,6 +25,7 @@ class ManualCardSeeder extends Seeder
 
                 if ($cat === 'boom') return 'Bomenrijk';
                 if ($cat === 'schimmel') return 'Schimmelrijk';
+                if ($cat === 'bloem') return 'Bloemenrijk';
 
                 $haystack = mb_strtolower(
                     (($row['locatie'] ?? '') . ' ' . ($row['kenmerken'] ?? '') . ' ' . ($row['feitje'] ?? ''))
