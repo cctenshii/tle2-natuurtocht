@@ -19,7 +19,6 @@
         <p id="answerNum">{{$setAnswerId}}</p>
         <p id="answerExplanation"></p>
         <!--🔴 Dit moet nog een 'if empty' zodat er of text is of de daadwerkelijke explanation-->
-        <!--🔴 Als het goed is geklikt moet de kaart shiny worden (miss different btns)-->
     </div>
     <section style="margin-top: 6vh;">
         <h1 style="font-size: 2rem;">Upload gelukt!</h1>
@@ -27,7 +26,8 @@
         <p style="margin-left: 15vw; margin-right: 15vw;">Beantwoord de vraag juist voor een glimmende kaart!</p>
     </section>
     <section style="margin-top: 3vh;">
-        <form action="{{ route('cards.makeShiny', $idCard)}}" method="GET">
+        <form action="{{ route('cards.makeShiny', $idCard)}}" method="POST" id="rightAnwserForm">
+            @csrf
             <h2 style="margin-bottom: 2vh;">{{$data->question_text}}</h2>
             <div style="display: flex; flex-direction: column; gap: 2vh;">
                 @foreach($answersArray as $question)
@@ -39,15 +39,18 @@
                 <span id="resultAns"></span>
                 <p id="explanation" style="color: dimgrey; font-style: italic;"></p>
                 <div style="margin-top: 3vh">
-                    <input type="submit" value="Verder" id="submitBtnTrue"
-                           style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: #319E88; position: absolute;">
-                    <input type="submit" value="Verder" id="submitBtnFalse" form="wrongAnswerForm"
-                           style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: #319E88">
+                    <input type="submit" value="Verder" id="submitBtnTrue" form="rightAnwserForm"
+                           style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: #319E88; position: absolute;"
+                           disabled>
+                    <input type="submit" value="Verder" id="submitBtnFalse" form="wrongAnswerForm" disabled
+                           style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: red">
                 </div>
             </div>
         </form>
 
-        <form action="{{ route('cards.show', $idCard) }}" id="wrongAnswerForm"></form>
+        <form action="{{ route('cards.show', $idCard) }}" id="wrongAnswerForm">
+            @csrf
+        </form>
 
     </section>
     <script> <!--src="../js/quiz.js" defer-->
@@ -106,6 +109,7 @@
                 let text = document.getElementById(changeInputBtn).value;
                 document.getElementById(changeInputBtn).value = text + " ✓";
                 document.getElementById('submitBtnTrue').style.visibility = "visible";
+                document.getElementById('submitBtnTrue').disabled = false;
             } else if (!result) {
                 resultTitle.innerHTML = "Helaas";
                 explanationElement.innerHTML = "Dit is niet het goede antwoord. Je hebt wel het kaartje verdiend!";
@@ -114,6 +118,8 @@
                 document.getElementById(changeInputBtn).value = text + " ✘";
                 //✖ ✗ ✘
                 document.getElementById('submitBtnFalse').style.visibility = "visible";
+                document.getElementById('submitBtnFalse').disabled = false;
+
             }
             explanationElement.innerHTML = explanation;
 
