@@ -25,6 +25,7 @@ class ManualCardSeeder extends Seeder
 
                 if ($cat === 'boom') return 'Bomenrijk';
                 if ($cat === 'schimmel') return 'Schimmelrijk';
+                if ($cat === 'bloem') return 'Bloemenrijk';
 
                 $haystack = mb_strtolower(
                     (($row['locatie'] ?? '') . ' ' . ($row['kenmerken'] ?? '') . ' ' . ($row['feitje'] ?? ''))
@@ -347,6 +348,86 @@ class ManualCardSeeder extends Seeder
                     'wrong2' => 'Hij is heel klein, kleiner dan een knikker',
                     'seasons' => ['Zomer', 'Herfst'],
                 ],
+                [
+                    'title' => 'Winterjasmijn',
+                    'category' => 'Bloem',
+                    'season_text' => 'Winter',
+                    'kenmerken' => 'Opvallende stervormige gele bloemen op kale takken.',
+                    'locatie' => '',
+                    'feitje' => 'Kan tegen de kou, zelfs als het vriest. Dat maakt hem een soort "superheld-plant"!',
+                    'question' => 'Welke bijzondere eigenschap heeft de winterjasmijn?',
+                    'correct' => 'Hij bloeit midden in de winter',
+                    'wrong1' => 'Hij heeft stekels zoals een roos',
+                    'wrong2' => 'Hij ruikt heel sterk naar citroen',
+                    'seasons' => ['Winter'],
+                ],
+                [
+                    'title' => 'Paarse dovenetel',
+                    'category' => 'Plant',
+                    'season_text' => 'Alle seizoenen',
+                    'kenmerken' => 'Plant met paarse tot roodachtige bovenste blaadjes, bloemen en een vierkante stengel.',
+                    'locatie' => '',
+                    'feitje' => 'Is géén brandnetel! Ondanks zijn naam prikt hij helemaal niet--dus geen paniek.',
+                    'question' => 'Waarom heet de paarse dovenetel een "dovenetel"?',
+                    'correct' => 'De bladeren lijken op brandnetels, maar prikken niet',
+                    'wrong1' => 'De plant is giftig en maakt je oren doof',
+                    'wrong2' => 'De bloemen groeien altijd naast echte brandnetels',
+                    'seasons' => ['Lente', 'Zomer', 'Herfst', 'Winter'],
+                ],
+                [
+                    'title' => 'Sneeuwklokje',
+                    'category' => 'Bloem',
+                    'season_text' => 'Winter',
+                    'kenmerken' => 'Kleine planten met klokvormige witte bloemen, met subtiele groene vlekjes in het midden.',
+                    'locatie' => 'Landgoederen en buitenplaatsen',
+                    'feitje' => 'De bloem is niet echt wit, maar kleurloos. De kleur komt door de luchtbelletjes tussen de bladcellen die het licht weerkaatsen.',
+                    'question' => 'Wanneer zie je vaak de eerste sneeuwklokje?',
+                    'correct' => 'Aan het einde van de winter/begin van de lente',
+                    'wrong1' => 'In de zomer',
+                    'wrong2' => 'Alleen in de herfst',
+                    'seasons' => ['Winter'],
+                ],
+                [
+                    'title' => 'Lavendel',
+                    'category' => 'Plant',
+                    'season_text' => 'Zomer',
+                    'kenmerken' => 'Grijze, smalle, aromatische bladeren en paarse (soms witte, roze) bloemen.',
+                    'locatie' => '',
+                    'feitje' => 'Wordt al eeuwen gebruikt voor parfum, zeep en om kleding lekker te laten ruiken.',
+                    'question' => 'Waar staat lavendel vooral om bekend?',
+                    'correct' => 'Zijn paarse kleur en lekkere geur',
+                    'wrong1' => 'Dat hij heel snel groeit',
+                    'wrong2' => 'Dat hij altijd onder water groeit',
+                    'seasons' => ['Zomer'],
+                ],
+                [
+                    'title' => 'Herfststijloos',
+                    'category' => 'Bloem',
+                    'season_text' => 'Lente en Herfst',
+                    'kenmerken' => 'Krokusachtige, lila/roze bloemen zonder bladeren.',
+                    'locatie' => '',
+                    'feitje' => 'Hij bloeit in de herfst, maar zijn bladeren komen pas in de lente tevoorschijn.',
+                    'question' => 'Wat is opvallend aan de herfststijloos?',
+                    'correct' => 'Hij bloeit in de herfst maar krijgt zijn bladeren pas in de lente',
+                    'wrong1' => 'Hij verandert van kleur als je hem aanraakt',
+                    'wrong2' => 'Hij kan groeien in de sneeuw',
+                    'seasons' => ['Lente', 'Herfst'],
+                ],
+                [
+                    'title' => 'Munt',
+                    'category' => 'Plant',
+                    'season_text' => 'Lente, Zomer en Herfst',
+                    'kenmerken' => 'Groene bladeren die vaak een beetje kartelig zijn. Kan kleine paars-witte bloemetjes krijgen',
+                    'locatie' => '',
+                    'feitje' => 'Er zijn meer dan 20 soorten munt, zoals chocolademunt, aardbeimunt en zelfs ananasmunt. Ja, ze ruiken echt!',
+                    'question' => 'Waar wordt munt vaak voor gebruikt?',
+                    'correct' => 'In thee en kauwgom voor een frisse smaak',
+                    'wrong1' => 'Om meubels schoon te maken',
+                    'wrong2' => 'Om dieren op afstand te houden',
+                    'seasons' => ['Lente', 'Zomer', 'Herfst'],
+                ]
+
+
             ];
 
             foreach ($cardsData as $row) {
