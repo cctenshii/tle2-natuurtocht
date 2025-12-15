@@ -87,14 +87,15 @@
                             @forelse($category->grouped_items as $subGroup => $items)
                                 <h3 class="text-lg font-bold text-gray-800 mb-2 mt-4">{{ $subGroup }}</h3>
                                 <div class="grid grid-cols-3 gap-4">
-                                    {{--                                    the cards yuhh vv--}}
                                     @foreach($items as $item)
                                         <a href="{{ route('cards.show', $item->id) }}">
                                             <div @class([
-            'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
-            'shiny' => optional($item->pivot)->is_shiny,
-        ])>
-                                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"
+                'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
+                'shiny' => $item->users->first()?->pivot?->is_shiny,
+            ])>
+                                                <img
+                                                    src="{{ $item->users->first()?->pivot?->image_url ?? $item->image_url }}"
+                                                    alt="{{ $item->title }}"
                                                      class="mx-auto mb-2 rounded">
                                                 <span
                                                     class="block text-xs font-bold text-gray-500">{{ $item->number }}</span>

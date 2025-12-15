@@ -31,6 +31,19 @@ class PhotoController extends Controller
             ], 422);
         }
 
+        // --- WIZARD OF OZ LOGICA ---
+        // Check of de 'wizard_correct' flag is meegestuurd en waar is.
+        // Als Q niet is ingedrukt, is de waarde '0' of null.
+        $isSimulatedCorrect = $request->input('wizard_correct') === '1';
+
+        if (!$isSimulatedCorrect) {
+            // Simuleer dat de AI de foto afkeurt
+            return response()->json([
+                'message' => 'Helaas, de foto wordt niet herkend als een ' . $card->title . '. Probeer het opnieuw en zorg dat het onderwerp goed zichtbaar is.',
+            ], 422);
+        }
+        // ---------------------------
+
         try {
             // ✅ Check eerst of deze kaart al in bezit is (voor punten + voorkomen duplicates)
             $alreadyOwned = $user->cards()->where('cards.id', $card->id)->exists();
@@ -65,7 +78,7 @@ class PhotoController extends Controller
 
             $relativePath = 'images/cardimages/' . $filename;
 
-            // 4) Oude pivot foto verwijderen (alleen als het een lokale file is)
+            // 4) Oude pivot foto verwijderen
             if ($oldPivotImage && !str_starts_with($oldPivotImage, 'http')) {
                 $oldFullPath = public_path($oldPivotImage);
                 if (file_exists($oldFullPath)) {
@@ -73,7 +86,7 @@ class PhotoController extends Controller
                 }
             }
 
-            // 5) Pivot updaten (foto opslaan bij user_cards)
+            // 5) Pivot updaten
             $user->cards()->updateExistingPivot($card->id, [
                 'image_url' => $relativePath,
             ]);
