@@ -24,22 +24,42 @@ class PhotoController extends Controller
         ]);
 
         if ($validator->fails()) {
-            Log::error('Validatiefout bij foto-upload voor kaart ' . $card->id . ': ' . $validator->errors()->first());
+            // ... (bestaande logica) ...
             return response()->json([
                 'message' => 'De foto is niet geldig. Zorg dat het een afbeelding is (jpg, png) en niet groter dan 2MB.',
                 'errors' => $validator->errors(),
             ], 422);
         }
 
+        // --- WIZARD OF OZ LOGICA ---
+        // Check of de 'wizard_correct' flag is meegestuurd en waar is.
+        // Als Q niet is ingedrukt, is de waarde '0' of null.
+        $isSimulatedCorrect = $request->input('wizard_correct') === '1';
+
+        if (!$isSimulatedCorrect) {
+            // Simuleer dat de AI de foto afkeurt
+            return response()->json([
+                'message' => 'Helaas, de foto wordt niet herkend als een ' . $card->title . '. Probeer het opnieuw en zorg dat het onderwerp goed zichtbaar is.',
+            ], 422);
+        }
+        // ---------------------------
+
         try {
-            // 1) Zorg dat user de card alvast "owned" is (pivot bestaat dan zeker)
+            // ... (De rest van je bestaande opslag logica blijft hieronder hetzelfde) ...
+
+            // 1) Zorg dat user de card alvast "owned" is
             $user->cards()->syncWithoutDetaching([
                 $card->id => [
                     'acquired_at' => now()->toDateString(),
                 ],
             ]);
 
-            // 2) Haal de bestaande pivot op (zodat we oude foto kunnen verwijderen)
+            // ... enzovoorts ...
+
+            // (Ik heb de rest van de functie hier ingekort voor leesbaarheid,
+            // maar laat de originele code staan die hieronder volgt in je bestand)
+
+            // 2) Haal de bestaande pivot op
             $ownedCard = $user->cards()
                 ->where('cards.id', $card->id)
                 ->first();
@@ -54,17 +74,13 @@ class PhotoController extends Controller
                 mkdir($dir, 0755, true);
             }
 
-            // unieke filename
             $ext = $file->getClientOriginalExtension();
             $filename = 'user_' . $user->id . '_card_' . $card->id . '_' . time() . '.' . $ext;
 
-            // move naar public/images/cardimages/...
             $file->move($dir, $filename);
-
-            // path zoals jij in DB zet (zonder public_path)
             $relativePath = 'images/cardimages/' . $filename;
 
-            // 4) Oude pivot foto verwijderen (alleen als het een lokale file is)
+            // 4) Oude pivot foto verwijderen
             if ($oldPivotImage && !str_starts_with($oldPivotImage, 'http')) {
                 $oldFullPath = public_path($oldPivotImage);
                 if (file_exists($oldFullPath)) {
