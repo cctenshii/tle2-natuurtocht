@@ -1,59 +1,12 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+🌿 TLE2 Natuurtocht - Natuur DexWelkom bij de Natuurtocht Applicatie. Dit project is een interactieve webapplicatie waarmee gebruikers de natuur in kunnen trekken om specifieke planten, bomen en schimmels te ontdekken. Door foto's te maken van gevonden items, vullen gebruikers hun digitale "Natuur Dex".🚀 Features•Natuur Dex: Een overzicht van alle te verzamelen natuuritems, gegroepeerd per categorie (Bomen, Planten, Bloemen, Schimmels).•Seizoensfilters: De Dex past zich automatisch aan het huidige seizoen aan, of kan handmatig gefilterd worden (Lente, Zomer, Herfst, Winter).•Camera Integratie: In-browser camera functionaliteit om direct foto's te maken en te uploaden.•Progressie Systeem: Gebruikers zien direct hoeveel procent van de items ze hebben gevonden in het huidige gebied/seizoen.•Wizard of Oz Validatie: Een gesimuleerd AI-validatiesysteem om foto-uploads te testen (zie kopje "Testen").•Rijke Data: Elk item bevat feitjes, locatie-informatie en quizvragen.🛠️ Tech Stack•Framework: Laravel (PHP)•Frontend: Blade Templates•Styling: Tailwind CSS•Interactiviteit: Alpine.js (voor de camera, accordions en modals)•Database: MySQL / SQLite⚙️ InstallatieVolg deze stappen om het project lokaal te draaien:1.Clone de repository:Shell Scriptgit clone <jouw-repo-url>
+cd tle2-natuurtocht2.Installeer dependencies:Shell Scriptcomposer install
+npm install3.Environment setup: Kopieer het .env.example bestand naar .env:Shell Scriptcp .env.example .env
+php artisan key:generateZorg dat je database gegevens in de .env correct staan ingesteld.4.Database Migraties & Seeding: Dit is een cruciale stap. De ManualCardSeeder vult de database met alle natuurkaarten (Brandnetel, Eik, etc.).Shell Scriptphp artisan migrate:fresh --seed5.Start de server:Shell Scriptnpm run dev
+# In een nieuwe terminal:
+php artisan serve📸 Hoe werkt de Camera & Validatie (Wizard of Oz)Voor User Story 19 ("Als gebruiker wil ik weten of de foto correct is") is een Wizard of Oz methode geïmplementeerd. Omdat er nog geen echte AI-beeldherkenning is, simuleren we dit proces.Het scenario testen:1.Ga naar een kaart in de Natuur Dex die je nog niet hebt (bv. "Brandnetel").2.Klik op "Maak foto".3.Maak een foto met de camera.Scenario A: Foutieve Foto (Simulatie)•Klik met je muis op de knop "Gebruik foto".•❌ Resultaat: Je krijgt een foutmelding: "Helaas, de foto wordt niet herkend als een Brandnetel...".Scenario B: Correcte Foto (Simulatie)•Zorg dat de foto preview zichtbaar is.•Druk op je toetsenbord op de ENTER toets.•✅ Resultaat: De foto wordt goedgekeurd, geüpload en de kaart wordt aan je collectie toegevoegd.Technische info: De frontend stuurt een hidden field wizard_correct mee. De knop zet deze op 0, de Enter-toets zet deze op 1. De PhotoController checkt deze waarde en geeft een 422 error terug als deze 0 is.📂 Project StructuurHier zijn enkele belangrijke bestanden in de codebase:•app/Models/Card.php: Het hoofdmodel. Maakt gebruik van een json kolom (properties) om flexibele data zoals feitjes, quizvragen en specifieke kenmerken op te slaan.•app/Http/Controllers/NatuurDexController.php: Regelt de logica voor het dashboard, inclusief het filteren op seizoenen en het berekenen van de voortgangspercentages.•app/Http/Controllers/PhotoController.php: Verwerkt de upload, voert de "Wizard of Oz" validatie uit en koppelt de kaart aan de gebruiker.•resources/views/cards/show.blade.php: De detailpagina. Bevat de Alpine.js logica (x-data="camera(...)") voor het aansturen van de webcam en het afvangen van de Enter-toets.🧪 Database SeedingDe applicatie leunt zwaar op de ManualCardSeeder. Deze vult de cards tabel met rijke data. De structuur van een kaart in de database ziet er ongeveer zo uit (in de properties JSON kolom):JSON{
+    "rijk": "Plant",
+    "seizoen": "Lente, Zomer",
+    "feitje": "Wist je dat...",
+    "kenmerken": "Groene bladeren...",
+    "locatie_text": "Bosranden"
+}
