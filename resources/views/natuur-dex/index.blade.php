@@ -13,7 +13,7 @@
     @endpush
 
     @php
-        $u = auth()->user();
+        ($user = auth()->user())
     @endphp
 
     <!-- Mobiele Container -->
@@ -27,22 +27,6 @@
                    <div x-show="openAccordion === {{ $categories->first()->id ?? 'null' }}"
                         x-transition
                         class="flex items-center gap-1 font-semibold {{ $seasonStyles['color'] }}">
-                       <div class="flex items-center justify-between">
-                             <span class="font-semibold text-gray-800">
-                                    Level {{ $u->level }}
-                                    </span>
-
-                                     @if($u->next_level_points)
-                               <span class="text-sm text-gray-500">
-                                 {{ $u->points_balance }} / {{ $u->next_level_points }} pts
-                                 </span>
-                           @else
-                               <span class="text-sm text-gray-500">
-                    {{ $u->points_balance }} pts (max)
-                             </span>
-                           @endif
-                       </div>
-
                        <form method="GET" id="seasonForm" class="mb-4">
                            <select name="season" id="seasonSelect"
                                    onchange="document.getElementById('seasonForm').submit();">
@@ -113,5 +97,34 @@
                 @endforeach
             </div>
         </main>
+        @if($user)
+            <div class="bg-white border border-gray-200 p-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="font-bold text-gray-800">
+                        Level {{ $user->level }}
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        {{ $user->point_balance }} pts
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div class="h-2 bg-cyan-700" style="width: {{ $user->level_progress_percent }}%"></div>
+                    </div>
+
+                    <div class="mt-1 text-xs text-gray-500 flex justify-between">
+                        <span>{{ $user->current_level_min_points }} pts</span>
+                        <span>
+                    @if($user->next_level_points)
+                                volgende: {{ $user->next_level_points }} pts
+                            @else
+                                max level
+                            @endif
+                </span>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </x-app-layout>
