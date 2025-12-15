@@ -37,7 +37,8 @@ class CardController extends Controller
             ->get()
             ->first();
 
-        json_decode($shinyCard, true);
+        json_encode($shinyCard, true);
+        dd($shinyCard);
         $shinyCard['is_shiny'] = true;
         return redirect()->route('natuur-dex.index');
     }
