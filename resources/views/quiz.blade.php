@@ -40,9 +40,14 @@
             <h2 style="margin-bottom: 2vh;">{{$data->question_text}}</h2>
             <div style="display: flex; flex-direction: column; gap: 2vh;">
                 @foreach($answersArray as $question)
-                    <input type="button" value="{{$question['text']}}" id="{{$question['id']}}" class="userInput"
+                    <input type="button"
+                           value="{{$question['text']}}"
+                           id="{{$question['id']}}"
+                           class="userInput"
+                           data-explanation="{{ e($question['explanation'] ?? '') }}"
                            style="background:#0076A8; color:white; border: none; border-radius: 10%; padding: 10px;">
                 @endforeach
+
             </div>
             <div style="margin-top: 3vh">
                 <span id="resultAns"></span>
@@ -129,7 +134,9 @@
                 document.getElementById('submitBtnFalse').disabled = false;
 
             }
-            explanationElement.innerHTML = explanation;
+            explanationElement.innerHTML =
+                allInputButtons[btnChange].dataset.explanation || "Geen uitleg beschikbaar";
+
 
         }
     </script>
