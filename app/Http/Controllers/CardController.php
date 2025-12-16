@@ -32,14 +32,10 @@ class CardController extends Controller
 
     public function makeCardShiny(int $id)
     {
-        $shinyCard = DB::table('user_cards')
-            ->where('card_id', '=', $id)
-            ->get()
-            ->first();
+        auth()->user()
+            ->cards()
+            ->updateExistingPivot($id, ['is_shiny' => true]);
 
-        json_encode($shinyCard, true);
-        dd($shinyCard);
-        $shinyCard['is_shiny'] = true;
         return redirect()->route('natuur-dex.index');
     }
 

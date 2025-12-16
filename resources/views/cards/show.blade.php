@@ -26,7 +26,7 @@
 
                 @php
                     $props = $card->properties ?? [];
-                    $locatieText = $props['locatie_text'] ?? null;
+                    $locatieText = $props['extra_info'] ?? null;
                     $feitje = $props['feitje'] ?? null;
                 @endphp
 
