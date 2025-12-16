@@ -38,5 +38,20 @@ class UserCardSeeder extends Seeder
                 ]
             );
         }
+
+        // 1x startwaarde op basis van bestaande user_cards
+        $rows = DB::table('user_cards')
+            ->selectRaw("
+        user_id,
+        SUM(CASE WHEN is_shiny = 1 THEN 30 ELSE 15 END) as pts
+    ")
+            ->groupBy('user_id')
+            ->get();
+
+        foreach ($rows as $row) {
+            DB::table('users')
+                ->where('id', $row->user_id)
+                ->update(['points_balance' => (int) $row->pts]);
+        }
     }
 }

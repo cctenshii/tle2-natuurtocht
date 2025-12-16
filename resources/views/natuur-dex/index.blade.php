@@ -12,6 +12,10 @@
         </style>
     @endpush
 
+    @php
+        ($user = auth()->user())
+    @endphp
+
     <!-- Mobiele Container -->
     <div class="h-screen bg-white shadow-2xl relative overflow-hidden flex flex-col"
          x-data="{openAccordion: {{ $categories->first()->id ?? 'null' }}}">
@@ -67,14 +71,15 @@
                             @forelse($category->grouped_items as $subGroup => $items)
                                 <h3 class="text-lg font-bold text-gray-800 mb-2 mt-4">{{ $subGroup }}</h3>
                                 <div class="grid grid-cols-3 gap-4">
-                                    {{--                                    the cards yuhh vv--}}
                                     @foreach($items as $item)
                                         <a href="{{ route('cards.show', $item->id) }}">
                                             <div @class([
-            'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
-            'shiny' => optional($item->pivot)->is_shiny,
-        ])>
-                                                <img src="{{ $item->image_url }}" alt="{{ $item->title }}"
+                'bg-yellow-100 border border-yellow-200 rounded-lg p-2 text-center shadow',
+                'shiny' => $item->users->first()?->pivot?->is_shiny,
+            ])>
+                                                <img
+                                                    src="{{ $item->users->first()?->pivot?->image_url ?? $item->image_url }}"
+                                                    alt="{{ $item->title }}"
                                                      class="mx-auto mb-2 rounded">
                                                 <span
                                                     class="block text-xs font-bold text-gray-500">{{ $item->number }}</span>
@@ -92,5 +97,34 @@
                 @endforeach
             </div>
         </main>
+        @if($user)
+            <div class="bg-white border border-gray-200 p-3 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div class="font-bold text-gray-800">
+                        Level {{ $user->level }}
+                    </div>
+                    <div class="text-sm text-gray-600">
+                        {{ $user->point_balance }} pts
+                    </div>
+                </div>
+
+                <div class="mt-2">
+                    <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div class="h-2 bg-cyan-700" style="width: {{ $user->level_progress_percent }}%"></div>
+                    </div>
+
+                    <div class="mt-1 text-xs text-gray-500 flex justify-between">
+                        <span>{{ $user->current_level_min_points }} pts</span>
+                        <span>
+                    @if($user->next_level_points)
+                                volgende: {{ $user->next_level_points }} pts
+                            @else
+                                max level
+                            @endif
+                </span>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </x-app-layout>

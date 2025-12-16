@@ -87,12 +87,15 @@ class Card extends Model
             }
         );
     }
-    protected function locatieText(): Attribute
+    protected function extraInfo(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->properties['locatie_text'] ?? null
+            get: fn () => $this->properties['extra_info']
+                ?? $this->properties['locatie_text']
+                ?? null
         );
     }
+
 
     protected function feitje(): Attribute
     {
