@@ -105,10 +105,12 @@
                         Opnieuw
                     </button>
 
-                    <button x-show="photoPreview && !loading" @click="uploadPhoto()"
+                    <button x-show="photoPreview && !loading"
+                            @click="wizardCorrect = false; uploadPhoto()"
                             class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
                         Gebruik foto
                     </button>
+
                 </div>
 
                 <button @click="stopCamera()" class="absolute top-2 right-3 text-gray-600 hover:text-gray-900 text-2xl">
@@ -128,11 +130,13 @@
                 stream: null,
                 csrfToken: csrfToken,
                 cardId: cardId,
+                wizardCorrect: false, // Standaard false (dus fout)
 
                 startCamera() {
                     this.cameraOpen = true;
                     this.error = '';
                     this.photoPreview = false;
+                    this.wizardCorrect = false; // Resetten bij openen
 
                     navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}})
                         .then(stream => {
@@ -157,6 +161,11 @@
                     const video = this.$refs.video;
                     const canvas = this.$refs.canvas;
 
+                    // Check of video klaar is
+                    if (video.readyState < 2) {
+                        return;
+                    }
+
                     const maxWidth = 800;
                     const scale = maxWidth / video.videoWidth;
 
@@ -170,6 +179,7 @@
                 retakePhoto() {
                     this.photoPreview = false;
                     this.error = '';
+                    this.wizardCorrect = false;
                 },
 
                 uploadPhoto() {
@@ -179,6 +189,10 @@
                     this.$refs.canvas.toBlob(blob => {
                         const formData = new FormData();
                         formData.append('photo', blob, 'card_photo.jpg');
+
+                        // Stuur de wizard status mee (1 = goed, 0 = fout)
+                        // Let op: naam is nu 'wizard_correct' om te matchen met PhotoController
+                        formData.append('wizard_correct', this.wizardCorrect ? '1' : '0');
 
                         fetch(`/cards/${this.cardId}/upload-photo`, {
                             method: 'POST',
@@ -190,7 +204,6 @@
                         })
                             .then(response => {
                                 if (response.status === 422) {
-                                    // Handle validation errors
                                     return response.json().then(err => {
                                         throw new Error(err.message || 'Validatie mislukt.');
                                     });
@@ -204,7 +217,6 @@
                                 if (data.redirect_url) {
                                     window.location.href = data.redirect_url;
                                 } else {
-                                    // fallback: refresh
                                     window.location.reload();
                                 }
                             })
@@ -214,16 +226,33 @@
                             })
                             .finally(() => {
                                 this.loading = false;
+                                // Reset wizard status na poging
+                                this.wizardCorrect = false;
                             });
-                    }, 'image/jpeg', 0.9);
+                    }, 'image/jpeg', 0.8);
                 },
 
                 init() {
                     this.$watch('cameraOpen', open => {
                         if (!open) this.stopCamera();
                     });
+
+                    // Luister naar de ENTER toets
+                    window.addEventListener('keydown', (e) => {
+                        // Alleen actie ondernemen als:
+                        // Camera open is
+                        // && Er een foto gemaakt is (preview zichtbaar)
+                        // && We niet al aan het laden zijn
+                        // && De toets Enter is
+                        if (this.cameraOpen && this.photoPreview && !this.loading && e.key === 'Enter') {
+                            e.preventDefault(); // Voorkom dat enter andere dingen doet
+                            this.wizardCorrect = true; // Zet op 'correct'
+                            this.uploadPhoto(); // Start upload
+                        }
+                    });
                 }
             }
         }
     </script>
+
 </x-app-layout>
