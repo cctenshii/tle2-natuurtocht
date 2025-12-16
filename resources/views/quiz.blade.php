@@ -28,6 +28,8 @@
     <section style="margin-top: 3vh;">
         <form action="{{ route('cards.makeShiny', $idCard)}}" method="POST" id="rightAnwserForm">
             @csrf
+            <input type="hidden" name="answer_id" id="selectedAnswerId" value="">
+
             <h2 style="margin-bottom: 2vh;">{{$data->question_text}}</h2>
             <div style="display: flex; flex-direction: column; gap: 2vh;">
                 @foreach($answersArray as $question)
@@ -83,6 +85,8 @@
         }
 
         function pressedBtn(btnPressed) {
+            document.getElementById('selectedAnswerId').value = allInputButtons[btnPressed].id;
+
             document.getElementById('resultAns').innerHTML = "Button pressed";
             buttonCheck(btnPressed);
 
