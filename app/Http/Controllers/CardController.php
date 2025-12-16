@@ -45,6 +45,19 @@ class CardController extends Controller
 
         $card = Card::findOrFail($id);
 
+        // ✅ Zorg dat pivot bestaat (kaart is sowieso "owned" na upload flow)
+        $user->cards()->syncWithoutDetaching([
+            $card->id => ['acquired_at' => now()->toDateString()],
+        ]);
+
+        // ✅ Check: quiz al gedaan?
+        $existing = $user->cards()->where('cards.id', $card->id)->first();
+        if ($existing?->pivot?->quiz_completed_at) {
+            return redirect()
+                ->route('quiz', $card->id)
+                ->with('info', 'Je hebt deze vraag al beantwoord!');
+        }
+
         $quiz = DB::table('quiz')->where('card_id', $card->id)->first();
         abort_unless($quiz, 404);
 
@@ -52,39 +65,44 @@ class CardController extends Controller
         $correct = collect($answers)->firstWhere('correct', true);
 
         $selectedId = (string) $request->input('answer_id');
-        $isCorrect = $correct && ((string)$correct['id'] === $selectedId);
+        $isCorrect = $correct && ((string) $correct['id'] === $selectedId);
 
-        if (!$isCorrect) {
-            return redirect()->route('quiz', $card->id)
-                ->withErrors(['answer_id' => 'Helaas, dat is niet goed.']);
+        // ✅ Markeer quiz altijd als gedaan (zodat je niet kunt retry’en)
+        $pivotUpdate = [
+            'quiz_completed_at' => now(),
+            'quiz_answer_id'    => $selectedId,
+            'quiz_correct'      => $isCorrect ? 1 : 0,
+        ];
+
+        if ($isCorrect) {
+            $pivotUpdate['is_shiny'] = 1;
         }
 
-        $user->cards()->syncWithoutDetaching([
-            $card->id => ['acquired_at' => now()->toDateString()],
-        ]);
+        $user->cards()->updateExistingPivot($card->id, $pivotUpdate);
 
-        // Maak shiny op de pivot
-        $user->cards()->updateExistingPivot($card->id, [
-            'is_shiny' => 1,
-        ]);
+        // ✅ Bonuspunten alleen bij correct (15 bonus -> totaal 30)
+        if ($isCorrect) {
+            $alreadyBonus = $user->pointTransactions()
+                ->where('action', 'card_shiny')
+                ->where('card_id', $card->id)
+                ->exists();
 
-        // Bonuspunten: +15 (want 15 voor collect was al gegeven, shiny moet totaal 30 zijn)
-        $alreadyBonus = $user->pointTransactions()
-            ->where('action', 'card_shiny')
-            ->where('card_id', $card->id)
-            ->exists();
+            if (!$alreadyBonus) {
+                $user->awardPoints(15, 'card_shiny', $card, ['from' => 'quiz_correct']);
+            }
 
-        if (!$alreadyBonus) {
-            $user->awardPoints(15, 'card_shiny', $card, [
-                'from' => 'quiz_correct',
-            ]);
+            return redirect()
+                ->route('cards.show', $card->id)
+                ->with('success', 'Goed! Kaart is nu shiny 🎉 (+15 bonus, totaal 30)');
         }
 
-        return redirect()->route('cards.show', $card->id)
-            ->with('success', 'Goed! Kaart is nu shiny 🎉 (+15 bonus, totaal 30)');
-
-
+        // ❌ Fout antwoord: wel klaar, maar niet shiny
+        return redirect()
+            ->route('cards.show', $card->id)
+            ->with('info', 'Deze vraag is nu beantwoord. Helaas niet goed — geen shiny deze keer.');
     }
+
+
 
 
 }

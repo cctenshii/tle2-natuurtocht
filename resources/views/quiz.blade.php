@@ -20,6 +20,11 @@
         <p id="answerExplanation"></p>
     </div>
     <section style="margin-top: 6vh;">
+        @if (session('info'))
+            <div style="margin: 0 15vw; padding: 12px; border-radius: 12px; background: #FFE9A8; border: 2px solid #E8C86A; color: #5A4300; font-weight: bold;">
+                {{ session('info') }}
+            </div>
+        @endif
         <h1 style="font-size: 2rem;">Upload gelukt!</h1>
         <hr style="background: black; margin-top: 2vh; margin-bottom: 2vh;">
         <p style="margin-right: 15vw; width: 100%; box-sizing: border-box;">
@@ -46,14 +51,11 @@
                     <input type="submit" value="Verder" id="submitBtnTrue" form="rightAnwserForm"
                            style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: #319E88; position: absolute;"
                            disabled>
-                    <input type="submit" value="Verder" id="submitBtnFalse" form="wrongAnswerForm" disabled
+                    <input type="submit" value="Verder" id="submitBtnFalse" form="rightAnwserForm" disabled
+
                            style="visibility: hidden; border: #63BFB5 2px solid; padding: 10px; background: red">
                 </div>
             </div>
-        </form>
-
-        <form action="{{ route('cards.show', $idCard) }}" id="wrongAnswerForm">
-            @csrf
         </form>
 
     </section>

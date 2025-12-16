@@ -38,7 +38,7 @@ class User extends Authenticatable
     public function cards(): BelongsToMany
     {
         return $this->belongsToMany(\App\Models\Card::class, 'user_cards')
-            ->withPivot(['acquired_at', 'image_url', 'is_shiny']);
+            ->withPivot(['acquired_at', 'image_url', 'is_shiny', 'quiz_completed_at', 'quiz_correct', 'quiz_answer_id']);
     }
 
     public function pointTransactions(): \Illuminate\Database\Eloquent\Relations\HasMany

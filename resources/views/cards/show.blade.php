@@ -22,7 +22,14 @@
                     </div>
                 @endif
 
-                <a href="{{ route('natuur-dex.index') }}" class="text-blue-600 underline text-sm">&larr; Terug</a>
+                    @if (session('info'))
+                        <div class="bg-yellow-100 border border-yellow-300 text-yellow-900 p-3 rounded mb-4">
+                            {{ session('info') }}
+                        </div>
+                    @endif
+
+
+                    <a href="{{ route('natuur-dex.index') }}" class="text-blue-600 underline text-sm">&larr; Terug</a>
 
                 @php
                     $props = $card->properties ?? [];

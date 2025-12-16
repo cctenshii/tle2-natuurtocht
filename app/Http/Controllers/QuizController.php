@@ -9,19 +9,37 @@ use Illuminate\Support\Facades\DB;
 
 class QuizController extends Controller
 {
-    public function showQuiz(int $cardId)
+    public function showQuiz(int $id)
     {
-        $quiz = DB::table('quiz')->where('card_id', $cardId)->first();
-        abort_unless($quiz, 404);
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
 
-        $answers = json_decode($quiz->answers ?? '[]', true) ?: [];
+        // Check of deze user deze quiz al gedaan heeft (via user_cards pivot)
+        $existing = $user->cards()->where('cards.id', $id)->first();
+        if ($existing?->pivot?->quiz_completed_at) {
+            return redirect()
+                ->route('cards.show', $id)
+                ->with('info', 'Je hebt deze vraag al beantwoord!');
+        }
 
-        return view('quiz', [
-            'data' => $quiz,
-            'answers' => $answers,
-            'idCard' => $cardId,
-        ]);
+        $tableData = DB::table('quiz')
+            ->where('card_id', '=', $id)
+            ->first();
+
+        abort_unless($tableData, 404);
+
+        // No-cache zodat back-button niet de oude quiz uit cache toont
+        return response()
+            ->view("quiz", ['data' => $tableData, 'idCard' => $id])
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
     }
+
+
+
 
     public function submitQuiz(Request $request, int $cardId)
     {
