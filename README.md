@@ -117,6 +117,96 @@ Some important files in the codebase: app/Models/Card.php: The main model. Uses 
 }
 
 ```
+<details>
+
+<summary>📊 Database Schema (ERD)</summary>
+
+The following diagram visualizes the relationships between the database tables, such as users, nature cards, and collection progress.
+
+```
+erDiagram
+    users ||--o{ user_cards : "has"
+    users ||--o{ point_transactions : "earns"
+    users ||--o{ friends : "has"
+    cards ||--o{ user_cards : "collected as"
+    cards ||--o{ quiz : "has"
+    cards ||--o{ card_location : "found in"
+    cards ||--o{ card_season : "available in"
+    categories ||--o{ cards : "classifies"
+    locations ||--o{ card_location : "contains"
+    seasons ||--o{ card_season : "contains"
+
+    users {
+        bigint id PK
+        varchar username
+        varchar email
+        varchar password
+        varchar picture_url
+        boolean admin
+        bigint point_balance
+    }
+
+    cards {
+        bigint id PK
+        varchar name
+        json properties
+        text description
+        bigint category_id FK
+        text images
+    }
+
+    user_cards {
+        bigint user_id FK
+        bigint card_id FK
+        date acquired_at
+        varchar image_url
+        boolean is_shiny
+    }
+
+    quiz {
+        bigint id PK
+        json answers
+        text question_text
+        text explanation
+        bigint card_id FK
+    }
+
+    point_transactions {
+        bigint id PK
+        bigint user_id FK
+        bigint card_id FK
+        varchar action
+        int points
+        json meta
+    }
+
+    categories {
+        bigint id PK
+        varchar name
+    }
+
+    friends {
+        bigint id PK
+        bigint user_id FK
+        bigint friend_id FK
+    }
+```
+
+Table Descriptions
+users: Manages user profiles, credentials, and point balances.
+
+cards: The core table containing all nature items (Natuur Dex entries).
+
+user_cards: A pivot table tracking which user has collected which card, including their custom image_url and "shiny" status.
+
+point_transactions: A log of points earned per specific action.
+
+quiz: Contains questions, answers, and explanations linked to specific cards.
+
+card_location & card_season: Pivot tables handling the many-to-many relationships for locations and seasonal availability.
+
+</details>
 
 
 </details>
+
